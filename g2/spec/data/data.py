@@ -1,29 +1,26 @@
 from typing import *
 from dataclasses import dataclass
 
-from .data_transform import Transform
+from .data_transform import DataTransform
 
 
 @dataclass
-class Data:
-    type: str
-
-
-@dataclass
-class DataCustom(Data):
-    callback: Callable
-    type: str = 'custom'
-
-
-@dataclass
-class DataFetch(Data):
-    value: str
-    transform: List[Transform]
+class FetchConnector:
     type: str = 'fetch'
-    
+    value: Optional[str] = None
+    format: Optional[Literal['json', 'csv']] = None
+    # Useful when format is 'csv'.
+    delimiter: Optional[str] = None
+    # /** Automatically infer the data to Javascript type  */
+    autoType: Optional[bool] = None
+    transform: Optional[List[DataTransform]] = None
+
 
 @dataclass
-class DataInline(Data):
-    value: List[Dict[str, AnyStr]]
-    transform: List[Transform]
+class InlineConnector:
     type: str = 'inline'
+    value: Optional[Any] = None
+    transform: Optional[List[DataTransform]] = None
+
+
+Data = Union[FetchConnector, InlineConnector]

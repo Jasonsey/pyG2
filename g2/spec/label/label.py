@@ -1,7 +1,8 @@
 from typing import *
 from dataclasses import dataclass
 
-from .label_transform import Transform
+from .label_transform import LabelTransform
+
 
 @dataclass
 class Label:
@@ -27,7 +28,7 @@ class Label:
     selector: Optional[Literal['last', 'first']] = None
     connector: Optional[bool] = None
     background: Optional[bool] = None
-    transform: Optional[List[Transform]] = None
+    transform: Optional[List[LabelTransform]] = None
     
     connector_stroke: Optional[str] = None
     connector_line_width: Optional[int] = None
