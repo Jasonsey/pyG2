@@ -185,29 +185,29 @@ class OrdinalOptions:
     """比较器"""
 
 
-# @dataclass
-# class BandOptions:
-#     """详细请参阅 scale/band.ts"""
-#     unknown: Optional[Any] = None
-#     """当需要映射的值不合法的时候，返回的值"""
-#     range: Union[List[number], List[str], None] = None
-#     """值域，默认为 [0, 1]"""
-#     domain: Optional[List] = None
-#     """定义域，默认为 [0, 1]"""
-#     round: Optional[bool] = None
-#     """是否需要对输出进行四舍五入"""
-#     paddingInner: Optional[number] = None
-#     """内部边距"""
-#     paddingOuter: Optional[number] = None
-#     """两侧边距"""
-#     padding: Optional[number] = None
-#     """同时定义内部边距和两侧边距，如果该值大于 0，则 paddingInner 和 paddingOuter 无效"""
-#     align: Optional[number] = None
-#     """对齐，取值为 0 - 1 的整数，例如 0.5 表示居中"""
-#     compare: Optional[Comparator] = None
-#     """比较器，用于对 domain 进行排序"""
-#     flex: Optional[List[number]] = None
-#     """每个条的宽度 (bandWidth) 的比例"""
+@dataclass
+class BandOptions:
+    """详细请参阅 scale/band.ts"""
+    unknown: Optional[Any] = None
+    """当需要映射的值不合法的时候，返回的值"""
+    range: Union[List[number], List[str], None] = None
+    """值域，默认为 [0, 1]"""
+    domain: Optional[List] = None
+    """定义域，默认为 [0, 1]"""
+    round: Optional[bool] = None
+    """是否需要对输出进行四舍五入"""
+    paddingInner: Optional[number] = None
+    """内部边距"""
+    paddingOuter: Optional[number] = None
+    """两侧边距"""
+    padding: Optional[number] = None
+    """同时定义内部边距和两侧边距，如果该值大于 0，则 paddingInner 和 paddingOuter 无效"""
+    align: Optional[number] = None
+    """对齐，取值为 0 - 1 的整数，例如 0.5 表示居中"""
+    compare: Optional[Comparator] = None
+    """比较器，用于对 domain 进行排序"""
+    flex: Optional[List[number]] = None
+    """每个条的宽度 (bandWidth) 的比例"""
 
 
 @dataclass
@@ -229,7 +229,6 @@ class PointOptions:
     """比较器，用于对 domain 进行排序"""
     flex: Optional[List[number]] = None
     """每个条的宽度 (bandWidth) 的比例"""
-
 
 
 @dataclass

@@ -2,12 +2,8 @@
 #
 # @Author: Lin, Max
 # @Email : jason.max.lin@outlook.com
-# @Time  : 2024/6/6 23:20
+# @Time  : 2024/6/8 10:34
 #
 # =============================================================================
-"""common"""
-from typing import *
-
-
-number = Union[int, float]
-Primitive = Union[int, float, str]
+"""__init__.py"""
+from .coordinate import *

@@ -7,8 +7,8 @@ from g2.common import number
 @dataclass
 class OverlapHideLabelTransform:
     type: str = 'overlapHide'
-    # The hide priority, is the comparator for label.sort().
     priority: Optional[Callable[[Any, Any], number]] = None
+    """The hide priority, is the comparator for label.sort()."""
 
 
 @dataclass
@@ -22,11 +22,10 @@ class OverlapDodgeYLabelTransform:
 @dataclass
 class ContrastReverseLabelTransform:
     type: str = 'contrastReverse'
-    # Transform when the contrast ratio < threshold.
-    # Default is `4.5`.
     threshold: Optional[number] = None
-    # The optional color palette, default is [#000, #fff].
+    """Transform when the contrast ratio < threshold. Default is `4.5`."""
     palette: Optional[List[str]] = None
+    """The optional color palette, default is [#000, #fff]."""
 
 
 @dataclass

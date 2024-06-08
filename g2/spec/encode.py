@@ -32,7 +32,7 @@ class TransformEncode:
 
 @dataclass
 class CustomEncode:
-    kwargs: Optional[Dict[str, Any]]
+    kwargs: Optional[Dict[str, Any]] = None
     type: Optional[Any] = None
 
 

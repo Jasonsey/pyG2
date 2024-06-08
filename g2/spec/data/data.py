@@ -9,10 +9,10 @@ class FetchConnector:
     type: str = 'fetch'
     value: Optional[str] = None
     format: Optional[Literal['json', 'csv']] = None
-    # Useful when format is 'csv'.
     delimiter: Optional[str] = None
-    # /** Automatically infer the data to Javascript type  */
+    """Useful when format is 'csv'."""
     autoType: Optional[bool] = None
+    """Automatically infer the data to Javascript type"""
     transform: Optional[List[DataTransform]] = None
 
 

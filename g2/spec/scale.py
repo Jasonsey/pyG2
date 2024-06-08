@@ -1,145 +1,124 @@
-from typing import *
-from dataclasses import dataclass
+from g2.scale import *
+from .palette import PaletteTypes
+
+
+ScaleTypes = Literal[
+    'linear',
+    'ordinal',
+    'identity',
+    'band',
+    'point',
+    'time',
+    'log',
+    'pow',
+    'sqrt',
+    'threshold',
+    'quantize',
+    'quantile',
+    'sequential',
+    'constant',
+]
 
 
 @dataclass
-class Scale:
-    type: str
+class BaseScale:
+    type: Optional[ScaleTypes] = None
+    palette: Optional[PaletteTypes] = None
+    rangeMax: Optional[number] = None
+    rangeMin: Optional[number] = None
+    domainMax: Optional[number] = None
+    domainMin: Optional[number] = None
+    key: Optional[str] = None
+    facet: Optional[bool] = None
+    independent: Optional[bool] = None
+    zero: Optional[bool] = None
+    offset: Optional[Callable[[number], number]] = None
+    relations: Optional[List[List[Any, Any]]] = None
 
 
 @dataclass
-class ScaleBand(Scale):
-    domain: Union[List[int], List[str], None] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    round: bool = False
-    padding_inner: int = 0
-    padding_outer: int = 0
-    padding: int = 0
-    align: float = 0.5
-    flex: Optional[List[int]] = None
-    type: str = 'band'
-
-
-@dataclass
-class ScaleLinear(Scale):
-    domain: Optional[List[int]] = None
-    domain_min: Optional[int] = None
-    domain_max: Optional[int] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    range_min: Union[int, str] = 0
-    range_max: Union[int, str] = 1
-    tick_count: int = 5
-    round: bool = False
-    clamp: bool = False
-    nice: bool = False
+class LinearScale(BaseScale, LinearOptions):
     type: str = 'linear'
 
 
 @dataclass
-class ScaleLog(Scale):
-    domain: Optional[List[int]] = None
-    domain_min: Optional[int] = None
-    domain_max: Optional[int] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    range_min: Union[int, str] = 0
-    range_max: Union[int, str] = 1
-    tick_count: int = 5
-    round: bool = False
-    clamp: bool = False
-    nice: bool = False
-    base: int = 10
-    type: str = 'log'
-
-
-@dataclass
-class ScaleOrdinal(Scale):
-    domain: Optional[List[int]] = None
-    range: Union[List[int], List[str]] = [0, 1]
+class OrdinalScale(BaseScale, OrdinalOptions):
     type: str = 'ordinal'
 
 
 @dataclass
-class ScalePoint(Scale):
-    domain: Optional[List[int]] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    round: bool = False
-    padding_inner: int = 0
-    padding_outer: int = 0
-    padding: int = 0
-    align: float = 0.5
+class IdentityScale(BaseScale, IdentityOptions):
+    type: str = 'identity'
+
+
+@dataclass
+class BandScale(BaseScale, BandOptions):
+    type: str = 'band'
+
+
+@dataclass
+class PointScale(BaseScale, PointOptions):
     type: str = 'point'
 
 
 @dataclass
-class ScalePow(Scale):
-    domain: Optional[List[int]] = None
-    domain_min: Optional[int] = None
-    domain_max: Optional[int] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    range_min: Union[int, str] = 0
-    range_max: Union[int, str] = 1
-    tick_count: int = 5
-    round: bool = False
-    clamp: bool = False
-    nice: bool = False
-    exponent: int = 2
+class TimeScale(BaseScale, TimeOptions):
+    type: str = 'time'
+
+
+@dataclass
+class LogScale(BaseScale, LogOptions):
+    type: str = 'log'
+
+
+@dataclass
+class PowScale(BaseScale, PowOptions):
     type: str = 'pow'
 
 
 @dataclass
-class ScaleQuantile(Scale):
-    domain: Optional[List[int]] = None
-    range: Optional[List[Any]] = None
-    tick_count: int = 5
-    nice: bool = False
-    type: str = 'quantile'
-
-
-@dataclass
-class ScaleQuantize(Scale):
-    domain: Optional[List[int]] = None
-    range: Optional[List[Any]] = None
-    tick_count: int = 5
-    nice: bool = False
-    type: str = 'quantize'
-
-
-@dataclass
-class ScaleSqrt(Scale):
-    domain: Optional[List[int]] = None
-    domain_min: Optional[int] = None
-    domain_max: Optional[int] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    range_min: Union[int, str] = 0
-    range_max: Union[int, str] = 1
-    tick_count: int = 5
-    round: bool = False
-    clamp: bool = False
-    nice: bool = False
-    exponent: float = 0.5
+class SqrtScale(BaseScale, SqrtOptions):
     type: str = 'sqrt'
 
 
 @dataclass
-class ScaleThreshold(Scale):
-    domain: Optional[List[int]] = None
-    range: Union[List[int], List[str]] = [0, 1]
+class ThresholdScale(BaseScale, ThresholdOptions):
     type: str = 'threshold'
 
 
 @dataclass
-class ScaleTime(Scale):
-    domain: Optional[List[int]] = None
-    domain_min: Optional[int] = None
-    domain_max: Optional[int] = None
-    range: Union[List[int], List[str]] = [0, 1]
-    range_min: Union[int, str] = 0
-    range_max: Union[int, str] = 1
-    tick_count: int = 5
-    tick_interval: Optional[int] = None
-    round: bool = False
-    clamp: bool = False
-    nice: bool = False
-    mask: Optional[str] = None
-    utc: bool = False
-    type: str = 'time'
+class QuantileScale(BaseScale, QuantileOptions):
+    type: str = 'quantile'
+
+
+@dataclass
+class QuantizeScale(BaseScale, QuantizeOptions):
+    type: str = 'quantize'
+
+
+@dataclass
+class SequentialScale(BaseScale, SequentialOptions):
+    type: str = 'sequential'
+
+
+@dataclass
+class ConstantScale(BaseScale, ConstantOptions):
+    type: str = 'constant'
+
+
+Scale = Union[
+    LinearScale,
+    OrdinalScale,
+    IdentityScale,
+    BandScale,
+    PointScale,
+    TimeScale,
+    LogScale,
+    PowScale,
+    SqrtScale,
+    ThresholdScale,
+    QuantizeScale,
+    QuantileScale,
+    SequentialScale,
+    ConstantScale,
+]

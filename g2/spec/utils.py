@@ -2,12 +2,14 @@
 #
 # @Author: Lin, Max
 # @Email : jason.max.lin@outlook.com
-# @Time  : 2024/6/6 23:20
+# @Time  : 2024/6/8 10:21
 #
 # =============================================================================
-"""common"""
+"""utils.py"""
 from typing import *
 
+from g2.common import number
 
-number = Union[int, float]
-Primitive = Union[int, float, str]
+
+Padding = Union[number, Literal['auto']]
+Closeable = Optional[bool]
