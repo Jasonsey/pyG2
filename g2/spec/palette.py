@@ -10,8 +10,6 @@ from typing import *
 from dataclasses import dataclass
 
 
-
-
 @dataclass
 class Category10Palette:
     type: str = 'category10'

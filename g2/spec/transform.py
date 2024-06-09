@@ -1,10 +1,7 @@
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import string, number, Primitive, boolean
-
-from .mark import ChannelTypes
-
+from g2.common import string, number, Primitive, boolean, ChannelTypes
 
 TransformTypes = Literal[
     'dodgeX',

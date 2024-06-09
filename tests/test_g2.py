@@ -6,10 +6,11 @@
 #
 # =============================================================================
 """test_g2"""
-from g2.spec import G2SpecMark
+from g2.spec import G2Spec
+from g2.spec.mark import LineMark
 
 
 def test_mark():
-    a = G2SpecMark()
+    mark = LineMark()
+    a = G2Spec(extend=mark)
     print(a)
-    

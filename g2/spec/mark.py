@@ -12,7 +12,7 @@ from .component import TooltipComponent, AxisComponent, LegendComponent, SliderC
     TitleComponent
 from .interaction import Interaction, InteractionTypes
 from .theme import Theme
-from g2.common import number
+from g2.common import number, ChannelTypes
 from .utils import Padding, Closeable
 
 
@@ -52,35 +52,6 @@ MarkTypes = Literal[
     'density',
     'heatmap',
     'liquid',
-]
-
-ChannelTypes = Literal[
-    'x',
-    'y',
-    'z',
-    'x1',
-    'y1',
-    'series',
-    'color',
-    'opacity',
-    'shape',
-    'size',
-    'key',
-    'groupKey',
-    'position',
-    'series',
-    'enterType',
-    'enterEasing',
-    'enterDuration',
-    'enterDelay',
-    'updateType',
-    'updateEasing',
-    'updateDuration',
-    'updateDelay',
-    'exitType',
-    'exitEasing',
-    'exitDuration',
-    'exitDelay',
 ]
 
 PositionChannelTypes = Literal[
@@ -295,7 +266,7 @@ class VectorMark(BaseMark):
 
 
 @dataclass
-class _SankeyMark1Layout:
+class SankeyMarkLayout:
     nodeId: Optional[Callable[[Any], str]] = None
     nodes: Optional[Callable[[Any], Any]] = None
     links: Optional[Callable[[Any], Any]] = None
@@ -325,7 +296,7 @@ class _SankeyMark1:
     """必须传递nodeLabels"""
     linkLabels: List[Dict[str, Any]]
     """必须传递linkLabels"""
-    layout: Optional[_SankeyMark1Layout] = None
+    layout: Optional[SankeyMarkLayout] = None
 
 
 _SankeyMark2Type = Union[Literal['source', 'target', 'value'], str, ChannelTypes]
@@ -345,7 +316,7 @@ class SankeyMark(_SankeyMark2, _SankeyMark1):
 
 
 @dataclass
-class _ChordMark1Layer:
+class ChordMarkLayout:
     nodes: Optional[Callable[[Any], Any]] = None
     links: Optional[Callable[[Any], Any]] = None
     y: Optional[number] = None
@@ -361,7 +332,7 @@ class _ChordMark1:
     """必须传递nodeLabels"""
     linkLabels: List[Dict[str, Any]]
     """必须传递linkLabels"""
-    layout: Optional[_ChordMark1Layer] = None
+    layout: Optional[ChordMarkLayout] = None
 
 
 _ChordMark2Type = Union[Literal['source', 'target', 'value'], str, ChannelTypes]
@@ -432,7 +403,7 @@ class ForceGraphMark(_ForceGraphMark2, _ForceGraphMark1):
 
 
 @dataclass
-class _TreeMark1Layout:
+class TreeMarkLayout:
     field: Optional[str] = None
     """Layout field. Default: 'value'."""
     nodeSize: Optional[Any] = None
@@ -447,7 +418,7 @@ class _TreeMark1Layout:
     """
     sortBy: Optional[Callable[[Any, Any], number]] = None
     """Sort function by compare 2 nodes."""
-    as_: Optional[List[str, str]] = None
+    as_: Optional[Tuple[str, str]] = None
     """Layout information saved into fields. Default: ['x', 'y']."""
 
 
@@ -455,7 +426,7 @@ class _TreeMark1Layout:
 class _TreeMark1:
     nodeLabels: List[Dict[str, Any]]
     linkLabels: List[Dict[str, Any]]
-    layout: Optional[_TreeMark1Layout] = None
+    layout: Optional[TreeMarkLayout] = None
 
 
 _TreeMark2Type = Union[Literal['value'], ChannelTypes]
@@ -474,8 +445,8 @@ class TreeMark(_TreeMark2, _TreeMark1):
 
 
 @dataclass
-class _WordCloudMarkLayout:
-    size: Optional[List[number, number]] = None
+class WordCloudMarkLayout:
+    size: Optional[Tuple[number, number]] = None
     """
     * @description If specified, sets the rectangular [width, height] of the layout
     * @default [1, 1]
@@ -483,7 +454,7 @@ class _WordCloudMarkLayout:
     font: Union[None, str, Callable[[Any], str]] = None
     fontStyle: Union[None, str, Callable[[Any], str]] = None
     fontWeight: Union[None, Any, Callable[[Any], Any]] = None
-    fontSize: Union[None, number, List[number, number], Callable[[Any], number]] = None
+    fontSize: Union[None, number, Tuple[number, number], Callable[[Any], number]] = None
     padding: Union[None, number, Callable[[Any], str]] = None
     text: Optional[Callable[[Any], number]] = None
     """
@@ -494,7 +465,7 @@ class _WordCloudMarkLayout:
     timeInterval: Optional[number] = None
     random: Union[None, number, Callable[[Any], number]] = None
     spiral: Union[None, Literal['archimedean', 'rectangular'], Callable[
-        [List[number, number]],
+        [Tuple[number, number]],
         Callable[[number], List[number]],
     ]] = None
     """
@@ -513,7 +484,7 @@ class WordCloudMark(BaseMark):
     type: str = 'wordCloud'
     encode: Union[_WordCloudMarkType, Union[Encode, List[Encode]], None] = None
     scale: Optional[Dict[_WordCloudMarkType, Scale]] = None
-    layout: Optional[_WordCloudMarkLayout] = None
+    layout: Optional[WordCloudMarkLayout] = None
 
 
 _GaugeMark = Union[str, ChannelTypes]

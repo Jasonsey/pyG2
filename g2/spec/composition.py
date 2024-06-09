@@ -17,10 +17,10 @@ from .interaction import Interaction, InteractionTypes
 from .transform import Transform
 from .theme import Theme
 from .mark import Mark, PositionChannelTypes, AtheisticChanelTypes
-from .component import AxisComponent, LegendComponent, TooltipComponent, SliderComponent, ScrollbarComponent, TitleComponent
+from .component import (AxisComponent, LegendComponent, TooltipComponent, SliderComponent, ScrollbarComponent,
+                        TitleComponent)
 from .scale import Scale
 from .label import LabelTransform
-
 
 CompositionTypes = Literal[
     'view',
@@ -33,7 +33,6 @@ CompositionTypes = Literal[
     'repeatMatrix',
     'timingKeyframe',
 ]
-
 
 
 @dataclass
@@ -265,6 +264,5 @@ Composition = Union[
     FacetCircleComposition,
     TimingKeyframeComposition,
 ]
-
 
 Node = Union[Mark, Composition]

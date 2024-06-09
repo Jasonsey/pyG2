@@ -17,31 +17,9 @@ from .mark import Mark
 
 
 @dataclass
-class G2SpecBasic:
+class G2Spec:
+    extend: Union[Mark, Composition, AxisComponent, LegendComponent]
     width: Optional[number] = None
     height: Optional[number] = None
     depth: Optional[number] = None
     autoFit: Optional[boolean] = None
-
-
-@dataclass
-class G2SpecMark(Mark, G2SpecBasic):
-    pass
-
-
-@dataclass
-class G2SpecComposition(Composition, G2SpecBasic):
-    pass
-
-
-@dataclass
-class G2SpecAxisComponent(AxisComponent, G2SpecBasic):
-    pass
-
-
-@dataclass
-class G2SpecLegendComponent(LegendComponent, G2SpecBasic):
-    pass
-
-
-G2Spec = Union[G2SpecMark, G2SpecComposition, G2SpecAxisComponent, G2SpecLegendComponent]

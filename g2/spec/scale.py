@@ -33,7 +33,7 @@ class BaseScale:
     independent: Optional[bool] = None
     zero: Optional[bool] = None
     offset: Optional[Callable[[number], number]] = None
-    relations: Optional[List[List[Any, Any]]] = None
+    relations: Optional[List[Tuple[Any, Any]]] = None
 
 
 @dataclass

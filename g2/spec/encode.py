@@ -26,8 +26,9 @@ class ColumnEncode:
 class TransformEncode:
     type: str = 'transform'
     value: Optional[Callable[
-        [Dict[str, Any], number, List[Dict[str, Any]]]
-        , Any]] = None
+        [Dict[str, Any], number, List[Dict[str, Any]]],
+        Any
+    ]] = None
 
 
 @dataclass
