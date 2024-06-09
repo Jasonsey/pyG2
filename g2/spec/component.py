@@ -59,6 +59,9 @@ class LegendComponent:
     kwargs: Optional[Dict[str, Any]] = None
 
 
+SliderComponent = Any
+ScrollbarComponent = Any
+
 
 @dataclass
 class TooltipItemValue:

@@ -8,7 +8,10 @@ from .transform import Transform
 from .scale import Scale
 from .coordinate import Coordinate
 from .animate import Animation
-from .component import TooltipComponent
+from .component import TooltipComponent, AxisComponent, LegendComponent, SliderComponent, ScrollbarComponent, \
+    TitleComponent
+from .interaction import Interaction, InteractionTypes
+from .theme import Theme
 from g2.common import number
 from .utils import Padding, Closeable
 
@@ -122,7 +125,7 @@ class BaseMark:
     data: Optional[Data] = None
     transform: Optional[List[Transform]] = None
     layout: Optional[Dict[str, Any]] = None
-    encode: Union[Dict[ChannelTypes, Encode], Dict[ChannelTypes, List[Encode]], None] = None
+    encode: Union[Dict[ChannelTypes, Union[Encode, List[Encode]]], None] = None
     scale: Optional[Dict[ChannelTypes, Scale]] = None
     coordinate: Optional[Coordinate] = None
     style: Optional[Dict[str, Any]] = None
@@ -137,251 +140,444 @@ class BaseMark:
     ]] = None
     labels: Optional[List[Dict[str, Any]]] = None
     tooltip: Optional[TooltipComponent] = None
-    axis?: Closeable<
-      Partial<Record<PositionChannelTypes, Closeable<AxisComponent>>>
-    >;
-    legend?: Closeable<
-      Partial<Record<AtheisticChanelTypes, Closeable<LegendComponent>>>
-    >;
-    slider?: Closeable<
-      Partial<Record<PositionChannelTypes, Closeable<SliderComponent>>>
-    >;
-    scrollbar?: Closeable<
-      Partial<Record<PositionChannelTypes, Closeable<ScrollbarComponent>>>
-    >;
-    title?: string | TitleComponent;
-    interaction?: Literal2Object<Interaction> & Record<string, any>;
-    theme?: Theme;
+    axis: Union[Closeable, Dict[PositionChannelTypes, Union[Closeable, AxisComponent]]] = None
+    legend: Union[Closeable, Dict[AtheisticChanelTypes, Union[Closeable, LegendComponent]]] = None
+    slider: Union[Closeable, Dict[PositionChannelTypes, Union[Closeable, SliderComponent]]] = None
+    scrollbar: Union[Closeable, Dict[PositionChannelTypes, Union[Closeable, ScrollbarComponent]]] = None
+    title: Union[str, TitleComponent, None] = None
+    interaction: Optional[Dict[InteractionTypes, Interaction]] = None
+    theme: Optional[Theme] = None
 
 
-export type CompositeMarkType = (
-  options: Record<string, any>,
-  context: Record<string, any>,
-) => any[];
+@dataclass
+class CompositeMark(BaseMark):
+    """由于不支持自定义函数，因此这个方法暂时无效"""
+    type: Optional[Callable[
+        [Dict[str, Any], Dict[str, Any]],
+        List
+    ]] = None
 
-export type CompositeMark = BaseMark<CompositeMarkType>;
 
-export type IntervalMark = BaseMark<'interval', ChannelTypes | 'series'>;
+_IntervalMarkType = Union[ChannelTypes, Literal['series']]
 
-export type RectMark = BaseMark<'rect', ChannelTypes>;
 
-export type LineMark = BaseMark<
-  'line',
-  ChannelTypes | 'position' | `position${number}`
->;
+@dataclass
+class IntervalMark(BaseMark):
+    type: str = 'interval'
+    encode: Union[_IntervalMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_IntervalMarkType, Scale]] = None
 
-export type PointMark = BaseMark<'point'>;
 
-export type TextMark = BaseMark<
-  'text',
-  ChannelTypes | 'text' | 'fontSize' | 'fontWeight' | 'rotate'
->;
+@dataclass
+class RectMark(BaseMark):
+    type: str = 'rect'
 
-export type LineXMark = BaseMark<'lineX', ChannelTypes>;
 
-export type LineYMark = BaseMark<'lineY', ChannelTypes>;
+_LineMarkType = Union[Literal['position'], str, ChannelTypes]
+"""可以传入position{number}的string"""
 
-export type RangeMark = BaseMark<'range', ChannelTypes>;
 
-export type RangeXMark = BaseMark<'rangeX', ChannelTypes>;
+@dataclass
+class LineMark(BaseMark):
+    type: str = 'line'
+    encode: Union[_LineMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_LineMarkType, Scale]] = None
 
-export type RangeYMark = BaseMark<'rangeY', ChannelTypes>;
 
-export type ConnectorMark = BaseMark<'connector', ChannelTypes>;
+@dataclass
+class PointMark(BaseMark):
+    type: str = 'point'
 
-export type CellMark = BaseMark<'cell', ChannelTypes>;
 
-export type AreaMark = BaseMark<'area', ChannelTypes>;
+_TextMarkType = Union[Literal['text', 'fontSize', 'fontWeight', 'rotate'], ChannelTypes]
 
-export type NodeMark = BaseMark<'node', ChannelTypes>;
 
-export type EdgeMark = BaseMark<'edge', ChannelTypes>;
+@dataclass
+class TextMark(BaseMark):
+    type: str = 'text'
+    encode: Union[_TextMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_TextMarkType, Scale]] = None
 
-export type LinkMark = BaseMark<'link', ChannelTypes>;
 
-export type ImageMark = BaseMark<'image', ChannelTypes | 'src'>;
+@dataclass
+class LineXMark(BaseMark):
+    type: str = 'lineX'
 
-export type PolygonMark = BaseMark<'polygon', ChannelTypes>;
 
-export type BoxMark = BaseMark<'box', ChannelTypes>;
+@dataclass
+class LineYMark(BaseMark):
+    type: str = 'lineY'
 
-export type BoxPlotMark = BaseMark<'box', ChannelTypes>;
 
-export type ShapeMark = BaseMark<'shape', ChannelTypes>;
+@dataclass
+class RangeMark(BaseMark):
+    type: str = 'range'
 
-export type VectorMark = BaseMark<'vector', ChannelTypes | 'rotate' | 'size'>;
 
-export type SankeyMark = BaseMark<
-  'sankey',
-  | 'source'
-  | 'target'
-  | 'value'
-  | `node${Capitalize<ChannelTypes>}`
-  | `link${Capitalize<ChannelTypes>}`
-  | ChannelTypes
-> & {
-  layout?: {
-    nodeId?: (node: any) => string;
-    nodes?: (graph: any) => any;
-    links?: (graph: any) => any;
-    /**
-     * sankey.nodeSort(undefined) is the default and resorts by ascending breadth during each iteration.
-     * sankey.nodeSort(null) specifies the input order of nodes and never sorts.
-     * sankey.nodeSort(function) specifies the given order as a comparator function and sorts once on initialization.
-     */
-    nodeSort?: null | undefined | ((a: any, b: any) => number);
-    /**
-     * sankey.linkSort(undefined) is the default, indicating that vertical order of links within each node will be determined automatically by the layout. If
-     * sankey.linkSort(null) will resort by the input.
-     * sankey.linkSort(function) specifies the given order as a comparator function and sorts once on initialization.
-     */
-    linkSort?: null | undefined | ((a: any, b: any) => number);
-    nodeAlign?:
-      | 'left'
-      | 'center'
-      | 'right'
-      | 'justify'
-      | ((node: any, n: number) => number);
-    nodeWidth?: number;
-    nodePadding?: number;
-    iterations?: number;
-    // support config the depth of node
-    nodeDepth?: (datum: any, maxDepth: number) => number;
-  };
-  nodeLabels: Record<string, any>[];
-  linkLabels: Record<string, any>[];
-};
+@dataclass
+class RangeXMark(BaseMark):
+    type: str = 'rangeX'
 
-export type ChordMark = BaseMark<
-  'chord',
-  | 'source'
-  | 'target'
-  | 'value'
-  | `node${Capitalize<ChannelTypes>}`
-  | `link${Capitalize<ChannelTypes>}`
-  | ChannelTypes
-> & {
-  layout?: {
-    nodes?: (graph: any) => any;
-    links?: (graph: any) => any;
-    y?: number;
-    id?: (node: any) => any;
-    sortBy?:
-      | 'id'
-      | 'weight'
-      | 'frequency'
-      | null
-      | ((a: any, b: any) => number);
-    nodeWidthRatio?: number;
-    nodePaddingRatio?: number;
-    sourceWeight?(edge: any): number;
-    targetWeight?(edge: any): number;
-  };
-  nodeLabels: Record<string, any>[];
-  linkLabels: Record<string, any>[];
-};
 
-export type PathMark = BaseMark<'path', ChannelTypes | 'd'>;
+@dataclass
+class RangeYMark(BaseMark):
+    type: str = 'rangeY'
 
-export type TreemapMark = BaseMark<'treemap', 'value' | ChannelTypes> & {
-  layout?: Record<string, any>;
-};
 
-export type PackMark = BaseMark<'pack', 'value' | ChannelTypes> & {
-  layout?: Record<string, any>;
-};
+@dataclass
+class ConnectorMark(BaseMark):
+    type: str = 'connector'
 
-export type ForceGraphMark = BaseMark<
-  'forceGraph',
-  | 'source'
-  | 'target'
-  | 'color'
-  | 'value'
-  | `node${Capitalize<ChannelTypes>}`
-  | `link${Capitalize<ChannelTypes>}`
-> & {
-  layout?: Record<string, any>;
-  nodeLabels: Record<string, any>[];
-  linkLabels: Record<string, any>[];
-};
 
-export type TreeMark = BaseMark<'tree', 'value' | ChannelTypes> & {
-  layout?: {
-    /**
-     * Layout field. Default: 'value'.
-     */
-    field?: string;
-    /**
-     * Sets this cluster layout’s node size to the specified two-element array of numbers [width, height] and returns this cluster layout.
-     * Default: null.
-     */
-    nodeSize?: any;
-    /**
-     * The separation accessor is used to separate neighboring leaves.  Default: (a, b) => a.parent == b.parent ? 1 : 2;
-     */
-    separation?: (a, b) => number;
-    /**
-     * Sort function by compare 2 nodes.
-     */
-    sortBy?: (a, b) => number;
-    /**
-     * Layout infomation saved into fields. Default: ['x', 'y'].
-     */
-    as?: [string, string];
-  };
-  nodeLabels: Record<string, any>[];
-  linkLabels: Record<string, any>[];
-};
+@dataclass
+class CellMark(BaseMark):
+    type: str = 'cell'
 
-export type WordCloudMark = BaseMark<
-  'wordCloud',
-  'value' | ChannelTypes | 'text'
-> & {
-  layout?: {
-    /**
-     * @description If specified, sets the rectangular [width, height] of the layout
-     * @default [1, 1]
-     */
-    size?: [number, number];
-    font?: string | ((word: any) => string);
-    fontStyle?: string | ((word: any) => string);
-    fontWeight?: any | ((word: any) => any);
-    fontSize?: number | [number, number] | ((word: any) => number);
-    padding?: number | ((word: any) => number);
-    /**
-     * @description sets the text accessor function, which indicates the text for each word
-     * @default (d) => d.text
-     */
-    text?: (word: any) => number;
-    rotate?: number | ((word: any) => number);
-    timeInterval?: number;
-    random?: number | (() => number);
-    /**
-     * @description sets the current type of spiral used for positioning words. This can either be one of the two built-in spirals, "archimedean" and "rectangular"
-     * @default "archimedean"
-     */
-    spiral?:
-      | 'archimedean'
-      | 'rectangular'
-      | ((size: [number, number]) => (t: number) => number[]);
-    imageMask?: HTMLImageElement | string;
-    on?:
-      | ((type: 'end', details?: { cloud; words; bounds }) => void)
-      | ((type: 'word', details?: { cloud; word }) => void);
-  };
-};
 
-export type GaugeMark = BaseMark<
-  'gauge',
-  | `arc${Capitalize<ChannelTypes>}`
-  | `indicator${Capitalize<ChannelTypes>}`
-  | `pointer${Capitalize<ChannelTypes>}`
-  | `pin${Capitalize<ChannelTypes>}`
-  | ChannelTypes
->;
+@dataclass
+class AreaMark(BaseMark):
+    type: str = 'area'
 
-export type DensityMark = BaseMark<'density', ChannelTypes | 'series'>;
-export type HeatmapMark = BaseMark<'heatmap'>;
-export type LiquidMark = BaseMark<'liquid'>;
 
-export type CustomMark = BaseMark<MarkComponent, ChannelTypes>;
+@dataclass
+class NodeMark(BaseMark):
+    type: str = 'node'
+
+
+@dataclass
+class EdgeMark(BaseMark):
+    type: str = 'edge'
+
+
+@dataclass
+class LinkMark(BaseMark):
+    type: str = 'link'
+
+
+_ImageMarkType = Union[Literal['src'], ChannelTypes]
+
+
+@dataclass
+class ImageMark(BaseMark):
+    type: str = 'image'
+    encode: Union[_ImageMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_ImageMarkType, Scale]] = None
+
+
+@dataclass
+class PolygonMark(BaseMark):
+    type: str = 'polygon'
+
+
+@dataclass
+class BoxMark(BaseMark):
+    type: str = 'box'
+
+
+@dataclass
+class BoxPlotMark(BaseMark):
+    type: str = 'box'
+
+
+@dataclass
+class ShapeMark(BaseMark):
+    type: str = 'shape'
+
+
+_VectorMarkType = Union[Literal['rotate', 'size'], ChannelTypes]
+
+
+@dataclass
+class VectorMark(BaseMark):
+    type: str = 'vector'
+    encode: Union[_VectorMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_VectorMarkType, Scale]] = None
+
+
+@dataclass
+class _SankeyMark1Layout:
+    nodeId: Optional[Callable[[Any], str]] = None
+    nodes: Optional[Callable[[Any], Any]] = None
+    links: Optional[Callable[[Any], Any]] = None
+    nodeSort: Optional[Callable[[Any], number]] = None
+    """
+    - sankey.nodeSort(undefined) is the default and resorts by ascending breadth during each iteration.
+    - sankey.nodeSort(null) specifies the input order of nodes and never sorts.
+    - sankey.nodeSort(function) specifies the given order as a comparator function and sorts once on initialization.
+    """
+    linkSort: Optional[Callable[[Any, Any], number]] = None
+    """
+    - sankey.linkSort(undefined) is the default, indicating that vertical order of links within each node will be 
+      determined automatically by the layout. If
+    - sankey.linkSort(null) will resort by the input.
+    - sankey.linkSort(function) specifies the given order as a comparator function and sorts once on initialization.
+    """
+    nodeAlign: Union[None, Literal['left', 'center', 'right', 'justify'], Callable[[Any, number], number]] = None
+    nodeWidth: Optional[number] = None
+    nodePadding: Optional[number] = None
+    iterations: Optional[number] = None
+    nodeDepth: Optional[Callable[[Any, number], number]] = None
+
+
+@dataclass
+class _SankeyMark1:
+    nodeLabels: List[Dict[str, Any]]
+    """必须传递nodeLabels"""
+    linkLabels: List[Dict[str, Any]]
+    """必须传递linkLabels"""
+    layout: Optional[_SankeyMark1Layout] = None
+
+
+_SankeyMark2Type = Union[Literal['source', 'target', 'value'], str, ChannelTypes]
+"""除了列出的选项，还可以传输node+ChannelTypes或者link+ChannelTypes的string"""
+
+
+@dataclass
+class _SankeyMark2(BaseMark):
+    type: str = 'sankey'
+    encode: Union[_SankeyMark2Type, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_SankeyMark2Type, Scale]] = None
+
+
+@dataclass
+class SankeyMark(_SankeyMark2, _SankeyMark1):
+    pass
+
+
+@dataclass
+class _ChordMark1Layer:
+    nodes: Optional[Callable[[Any], Any]] = None
+    links: Optional[Callable[[Any], Any]] = None
+    y: Optional[number] = None
+    id: Optional[Callable[[Any], Any]] = None
+    sortBy: Union[None, Literal['id', 'weight', 'frequency'], Callable[[Any, Any], number]] = None
+    sourceWeight: Optional[Callable[[Any], number]] = None
+    targetWeight: Optional[Callable[[Any], number]] = None
+
+
+@dataclass
+class _ChordMark1:
+    nodeLabels: List[Dict[str, Any]]
+    """必须传递nodeLabels"""
+    linkLabels: List[Dict[str, Any]]
+    """必须传递linkLabels"""
+    layout: Optional[_ChordMark1Layer] = None
+
+
+_ChordMark2Type = Union[Literal['source', 'target', 'value'], str, ChannelTypes]
+"""除了列出的选项，还可以传输node+ChannelTypes或者link+ChannelTypes的string"""
+
+
+@dataclass
+class _ChordMark2(BaseMark):
+    type: str = 'chord'
+    encode: Union[_ChordMark2Type, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_ChordMark2Type, Scale]] = None
+
+
+@dataclass
+class ChordMark(_ChordMark2, _ChordMark1):
+    pass
+
+
+_PathMarkType = Union[Literal['d'], ChannelTypes]
+
+
+@dataclass
+class PathMark(BaseMark):
+    type: str = 'path'
+    encode: Union[_PathMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_PathMarkType, Scale]] = None
+
+
+_TreemapMarkType = Union[Literal['value'], ChannelTypes]
+
+
+@dataclass
+class TreemapMark(BaseMark):
+    type: str = 'treemap'
+    encode: Union[_TreemapMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_TreemapMarkType, Scale]] = None
+
+
+_PackMarkType = Union[Literal['value'], ChannelTypes]
+
+
+@dataclass
+class PackMark(BaseMark):
+    type: str = 'pack'
+    encode: Union[_PackMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_PackMarkType, Scale]] = None
+
+
+@dataclass
+class _ForceGraphMark1:
+    nodeLabels: List[Dict[str, Any]]
+    linkLabels: List[Dict[str, Any]]
+
+
+_ForceGraphMark2Type = Union[Literal['source', 'target', 'color', 'value'], str]
+
+
+@dataclass
+class _ForceGraphMark2(BaseMark):
+    type: str = 'forceGraph'
+    encode: Union[_ForceGraphMark2Type, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_ForceGraphMark2Type, Scale]] = None
+
+
+@dataclass
+class ForceGraphMark(_ForceGraphMark2, _ForceGraphMark1):
+    pass
+
+
+@dataclass
+class _TreeMark1Layout:
+    field: Optional[str] = None
+    """Layout field. Default: 'value'."""
+    nodeSize: Optional[Any] = None
+    """
+    * Sets this cluster layout’s node size to the specified two-element array of numbers [width, height] and returns 
+      this cluster layout.
+    * Default: null.
+    """
+    separation: Optional[Callable[[Any, Any], number]] = None
+    """
+    The separation accessor is used to separate neighboring leaves.  Default: (a, b) => a.parent == b.parent ? 1 : 2;
+    """
+    sortBy: Optional[Callable[[Any, Any], number]] = None
+    """Sort function by compare 2 nodes."""
+    as_: Optional[List[str, str]] = None
+    """Layout information saved into fields. Default: ['x', 'y']."""
+
+
+@dataclass
+class _TreeMark1:
+    nodeLabels: List[Dict[str, Any]]
+    linkLabels: List[Dict[str, Any]]
+    layout: Optional[_TreeMark1Layout] = None
+
+
+_TreeMark2Type = Union[Literal['value'], ChannelTypes]
+
+
+@dataclass
+class _TreeMark2(BaseMark):
+    type: str = 'tree'
+    encode: Union[_TreeMark2Type, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_TreeMark2Type, Scale]] = None
+
+
+@dataclass
+class TreeMark(_TreeMark2, _TreeMark1):
+    pass
+
+
+@dataclass
+class _WordCloudMarkLayout:
+    size: Optional[List[number, number]] = None
+    """
+    * @description If specified, sets the rectangular [width, height] of the layout
+    * @default [1, 1]
+    """
+    font: Union[None, str, Callable[[Any], str]] = None
+    fontStyle: Union[None, str, Callable[[Any], str]] = None
+    fontWeight: Union[None, Any, Callable[[Any], Any]] = None
+    fontSize: Union[None, number, List[number, number], Callable[[Any], number]] = None
+    padding: Union[None, number, Callable[[Any], str]] = None
+    text: Optional[Callable[[Any], number]] = None
+    """
+    * @description sets the text accessor function, which indicates the text for each word
+    * @default (d) => d.text
+    """
+    rotate: Union[None, number, Callable[[Any], number]] = None
+    timeInterval: Optional[number] = None
+    random: Union[None, number, Callable[[Any], number]] = None
+    spiral: Union[None, Literal['archimedean', 'rectangular'], Callable[
+        [List[number, number]],
+        Callable[[number], List[number]],
+    ]] = None
+    """
+    * @description sets the current type of spiral used for positioning words. This can either be one of the two 
+      built-in spirals, "archimedean" and "rectangular" 
+    * @default "archimedean"""
+    imageMask: Optional[str] = None
+    on: Union[None, Callable[[Literal['end', 'word']], None]] = None
+
+
+_WordCloudMarkType = Union[Literal['value', 'text'], ChannelTypes]
+
+
+@dataclass
+class WordCloudMark(BaseMark):
+    type: str = 'wordCloud'
+    encode: Union[_WordCloudMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_WordCloudMarkType, Scale]] = None
+    layout: Optional[_WordCloudMarkLayout] = None
+
+
+_GaugeMark = Union[str, ChannelTypes]
+"""除了列出的选项，还可以传输arc+ChannelTypes, link+ChannelTypes, indicator+ChannelTypes, pointer+ChannelTypes, 
+pin+ChannelTypes的string"""
+
+
+@dataclass
+class GaugeMark(BaseMark):
+    type: str = 'gauge'
+    encode: Union[_GaugeMark, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_GaugeMark, Scale]] = None
+
+
+_DensityMarkType = Union[Literal['series'], ChannelTypes]
+
+
+@dataclass
+class DensityMark(BaseMark):
+    type: str = 'density'
+    encode: Union[_DensityMarkType, Union[Encode, List[Encode]], None] = None
+    scale: Optional[Dict[_DensityMarkType, Scale]] = None
+
+
+@dataclass
+class HeatmapMark(BaseMark):
+    type: str = 'heatmap'
+
+
+@dataclass
+class LiquidMark(BaseMark):
+    type: str = 'liquid'
+
+
+Mark = Union[
+    IntervalMark,
+    RectMark,
+    LineMark,
+    PointMark,
+    TextMark,
+    CellMark,
+    AreaMark,
+    NodeMark,
+    EdgeMark,
+    ImageMark,
+    PolygonMark,
+    BoxMark,
+    VectorMark,
+    LineXMark,
+    LineYMark,
+    RangeMark,
+    RangeXMark,
+    RangeYMark,
+    ConnectorMark,
+    SankeyMark,
+    ChordMark,
+    PathMark,
+    TreemapMark,
+    PackMark,
+    BoxPlotMark,
+    ShapeMark,
+    ForceGraphMark,
+    TreeMark,
+    WordCloudMark,
+    DensityMark,
+    CompositeMark,
+]

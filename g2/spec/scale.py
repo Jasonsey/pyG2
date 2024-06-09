@@ -1,4 +1,4 @@
-from g2.scale import *
+from g2.external.scale import *
 from .palette import PaletteTypes
 
 
