@@ -7,7 +7,7 @@ from g2.common import number
 @dataclass
 class SortByTransform:
     type: str = 'sortBy'
-    fields: Optional[Union[List[str], List[str, Optional[bool]]]] = None
+    fields: Optional[Union[List[str], Tuple[str, Optional[bool]]]] = None
     """type: [field, order]; order: true => ascend, false => descend"""
 
 
@@ -115,7 +115,7 @@ class KDEDataTransform:
 
 @dataclass
 class VennDataTransform:
-    as_: List[str, str]
+    as_: Tuple[str, str]
     """Set the generated fields, includes: [key, x, y, path]"""
     padding: Optional[number] = None
     """Canvas padding for 4 direction. Default is `0`."""

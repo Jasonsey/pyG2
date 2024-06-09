@@ -2,14 +2,14 @@
 #
 # @Author: Lin, Max
 # @Email : jason.max.lin@outlook.com
-# @Time  : 2024/6/6 23:20
+# @Time  : 2024/6/9 22:52
 #
 # =============================================================================
-"""common"""
-from typing import *
+"""test_g2"""
+from g2.spec import G2SpecMark
 
 
-number = Union[int, float]
-Primitive = Union[int, float, str]
-string = str
-boolean = bool
+def test_mark():
+    a = G2SpecMark()
+    print(a)
+    

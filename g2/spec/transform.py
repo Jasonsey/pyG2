@@ -1,194 +1,303 @@
 from typing import *
 from dataclasses import dataclass
 
+from g2.common import string, number, Primitive, boolean
 
-Reducer = Literal['mean', 'max', 'count', 'min', 'median', 'sum', 'first', 'last']
-TransformOrder = Union[Literal['value', 'sum', 'series', 'maxIndex'], List[str]]
+from .mark import ChannelTypes
+
+
+TransformTypes = Literal[
+    'dodgeX',
+    'stackY',
+    'normalizeY',
+    'stackEnter',
+    'jitter',
+    'jitterX',
+    'jitterY',
+    'symmetryY',
+    'diffY',
+    'select',
+    'selectY',
+    'selectX',
+    'groupX',
+    'groupY',
+    'group',
+    'groupColor',
+    'sortX',
+    'sortColor',
+    'sortY',
+    'flexX',
+    'pack',
+    'sample',
+    'filter',
+    'kde',
+]
+
+
+TransformOrder = Union[
+    Literal['value', 'sum', 'series', 'maxIndex'],
+    List[string],
+    None,
+    Callable[[Dict[string, Primitive]], Primitive]
+]
+
 
 @dataclass
-class Transform:
-    type: str
-
-
-@dataclass
-class TransformBin(Transform):
-    thresholds_x: int = None
-    thresholds_y: int = None
-    reducer: Optional[Dict[str, Reducer]] = None
-    type: str = 'bin'
-
-
-@dataclass 
-class TransormBinX(Transform):
-    thresholds: int
-    reducer: Optional[Dict[str, Reducer]] = None
-    type: str = 'binX'
-
-
-@dataclass
-class TransformDiffY(Transform):
-    group_by: Union[str, List[str]] = 'x'
-    series: bool = True
-    type: str = 'diffY'
-
-
-@dataclass
-class TransformDodgeX(Transform):
-    group_by: Union[str, List[str]] = 'x'
-    reverse: bool = False
-    order_by: Optional[TransformOrder] = None
-    padding: int = 0
+class DodgeXTransform:
     type: str = 'dodgeX'
+    groupBy: Union[None, string, List[string]] = None
+    reverse: Optional[boolean] = None
+    orderBy: Optional[TransformOrder] = None
+    padding: Optional[number] = None
 
 
 @dataclass
-class TransformFlexX(Transform):
-    field: str
-    channel: str = 'y'
-    reducer: Literal['sum'] = 'sum'
-    type: str = 'flexX'
+class StackYTransform:
+    type: str = 'stackY'
+    groupBy: Union[None, string, List[string]] = None
+    reverse: Optional[boolean] = None
+    orderBy: Optional[TransformOrder] = None
+    y: Optional[Literal['y', 'y1']] = None
+    y1: Optional[Literal['y', 'y1']] = None
+    series: Optional[boolean] = None
 
 
 @dataclass
-class TransformGroup(Transform):
-    channels: Union[str, List[str]] = ['x', 'y']
-    type: str = 'group'
-
-
-@dataclass
-class TransformGroupColor(Transform):
-    reducer: Optional[Dict[str, Reducer]] = None
-    type: str = 'groupColor'
-
-
-@dataclass
-class TransformGroupX(Transform):
-    reducer: Optional[Dict[str, Reducer]] = None
-    type: str = 'groupX'
-
-
-@dataclass
-class TransformGroupY(Transform):
-    reducer: Optional[Dict[str, Reducer]] = None
-    type: str = 'groupY'
-
-
-@dataclass
-class TransformJitter(Transform):
-    random: Callable
-    padding: int = 0
-    padding_x: int = 0
-    padding_y: int = 0
-    type: str = 'jitter'
-
-
-@dataclass
-class TransformJitterX(Transform):
-    random: Callable
-    padding: int = 0
-    type: str = 'jitterX'
-
-
-@dataclass
-class TransformJitterY(Transform):
-    random: Callable
-    padding: int = 0
-    type: str = 'jitterY'
-
-
-@dataclass
-class TransformNormalizeY(Transform):
-    group_by: Union[str, List[str]] = 'x'
-    basis: Literal['deviation', 'first', 'last', 'max', 'mean', 'median', 'min', 'sum'] = 'max'
+class NormalizeYTransform:
     type: str = 'normalizeY'
+    series: Optional[boolean] = None
+    groupBy: Union[None, string, List[string]] = None
+    basis: Optional[Literal['deviation', 'first', 'last', 'max', 'mean', 'median', 'min', 'sum']] = None
 
 
 @dataclass
-class TransformPack(Transform):
-    padding: int = 0
-    direction: Literal['row', 'col'] = 'col'
-    type: str = 'pack'
+class JitterTransform:
+    type: str = 'jitter'
+    padding: Optional[number] = None
+    paddingX: Optional[number] = None
+    paddingY: Optional[number] = None
+    random: Optional[Callable[[], number]] = None
 
 
 @dataclass
-class TransformSample(Transform):
-    group_by: Union[str, List[str]] = 'series'
-    thresholds: int = 2000
-    strategy: Literal['lttb', 'median', 'max', 'min', 'first', 'last'] = 'median'
-    type: str = 'sample'
+class JitterXTransform:
+    type: str = 'jitterX'
+    padding: Optional[number] = None
+    random: Optional[Callable[[], number]] = None
 
 
 @dataclass
-class TransformSelect(Transform):
-    channel: str
-    group_by: Union[str, List[str]] = 'series'
-    selector: Literal['min', 'max', 'first', 'last', 'mean', 'median'] = 'first'
-    type: str = 'select'
+class JitterYTransform:
+    type: str = 'jitterY'
+    padding: Optional[number] = None
+    random: Optional[Callable[[], number]] = None
 
 
 @dataclass
-class TransformSelectX(Transform):
-    group_by: Union[str, List[str]] = 'series'
-    selector: Literal['min', 'max', 'first', 'last', 'mean', 'median'] = 'first'
-    type: str = 'selectX'
-
-
-@dataclass
-class TransformSelectY(Transform):
-    group_by: Union[str, List[str]] = 'series'
-    selector: Literal['min', 'max', 'first', 'last', 'mean', 'median'] = 'first'
-    type: str = 'selectY'
-
-
-@dataclass
-class TransformSortColor(Transform):
-    reverse: bool = 'false'
-    by: str = 'y'
-    slice: Union[str, int, List[int, int]] = 'y'
-    reducer: Reducer = 'max'
-    type: str = 'sortColor'
-
-
-@dataclass
-class TransformSortX(Transform):
-    reverse: bool = 'false'
-    by: str = 'y'
-    slice: Union[str, int, List[int, int]] = 'y'
-    reducer: Reducer = 'max'
-    ordinal: bool = True
-    type: str = 'sortX'
-
-
-@dataclass
-class TransformSortY(Transform):
-    reverse: bool = 'false'
-    by: str = 'y'
-    slice: Union[str, int, List[int, int]] = 'y'
-    reducer: Reducer = 'max'
-    type: str = 'sortY'
-
-
-@dataclass
-class TransformStackEnter(Transform):
-    group_by: Union[str, List[str]] = 'x'
-    order_by: Optional[str] = None
-    reverse: bool = False 
-    duration: int = 3000
+class StackEnterTransform:
     type: str = 'stackEnter'
+    groupBy: Union[None, string, List[string]] = None
+    orderBy: Optional[string] = None
+    reverse: Optional[boolean] = None
+    duration: Optional[number] = None
+    reducer: Optional[Callable[[List[number], List], Any]] = None
 
 
 @dataclass
-class TransformStackY(Transform):
-    group_by: Union[str, List[str]] = 'x'
-    order_by: Optional[TransformOrder] = None
-    y: str = 'y1'
-    y1: str = 'y1'
-    reverse: bool = False
-    series: bool = True
-    type: str = 'stackX'
-
-
-@dataclass
-class TransformSymmetryY(Transform):
-    group_by: Union[str, List[str]] = 'x'
+class SymmetryYTransform:
     type: str = 'symmetryY'
+    groupBy: Union[None, string, List[string]] = None
+
+
+@dataclass
+class DiffYTransform:
+    type: str = 'diffY'
+    groupBy: Union[None, string, List[string]] = None
+    series: Optional[boolean] = None
+
+
+Selector = Union[
+    Literal['min', 'max', 'first', 'last', 'mean', 'median'],
+    Callable[[List[number], List[number]], List[number]]
+]
+
+
+@dataclass
+class SelectTransform:
+    type: str = 'select'
+    groupBy: Union[None, string, List[string]] = None
+    channel: Optional[ChannelTypes] = None
+    selector: Optional[Selector] = None
+
+
+@dataclass
+class SelectXTransform:
+    type: str = 'selectX'
+    groupBy: Union[None, string, List[string]] = None
+    selector: Optional[Selector] = None
+
+
+@dataclass
+class SelectYTransform:
+    type: str = 'selectY'
+    groupBy: Union[None, string, List[string]] = None
+    selector: Optional[Selector] = None
+
+
+@dataclass
+class SortColorTransform:
+    type: str = 'sortColor'
+    reverse: Optional[boolean] = None
+    by: Optional[string] = None
+    slice: Union[None, number, Tuple[number, number]] = None
+    reducer: Union[
+        None,
+        Literal['max', 'min', 'sum', 'first', 'last', 'mean', 'median'],
+        Callable[[List[number], List[Primitive]], Primitive],
+    ] = None
+
+
+@dataclass
+class SortXTransform:
+    type: str = 'sortX'
+    reverse: Optional[boolean] = None
+    by: Optional[string] = None
+    slice: Union[None, number, Tuple[number, number]] = None
+    ordinal: Optional[boolean] = None
+    reducer: Union[
+        None,
+        Literal['max', 'min', 'sum', 'first', 'last', 'mean', 'median'],
+        Callable[[List[number], List[Primitive]], Primitive],
+    ] = None
+
+
+@dataclass
+class SortYTransform:
+    type: str = 'sortY'
+    reverse: Optional[boolean] = None
+    by: Optional[string] = None
+    slice: Union[None, number, Tuple[number, number]] = None
+    reducer: Union[
+        None,
+        Literal['max', 'min', 'sum', 'first', 'last', 'mean', 'median'],
+        Callable[[List[number], List[Primitive]], Primitive],
+    ] = None
+
+
+@dataclass
+class FlexXTransform:
+    type: str = 'flexX'
+    field: Union[None, string, Callable[[Any], Primitive]] = None
+    channel: Optional[string] = None
+    reducer: Union[
+        None,
+        Literal['sum'],
+        Callable[[List[number], List[Primitive]], Primitive],
+    ] = None
+
+
+@dataclass
+class PackTransform:
+    type: str = 'pack'
+    padding: Optional[number] = None
+    direction: Optional[Literal['row', 'col']] = None
+
+
+Reducer = Union[
+    Literal['mean', 'max', 'count', 'min', 'median', 'sum', 'first', 'last'],
+    Callable[[List[number], List[Primitive]], Primitive],
+]
+
+
+@dataclass
+class GroupXTransform:
+    type: str = 'groupX'
+    kwargs: Optional[Dict[ChannelTypes, Reducer]] = None
+
+
+@dataclass
+class GroupYTransform:
+    type: str = 'groupY'
+    kwargs: Optional[Dict[ChannelTypes, Reducer]] = None
+
+
+@dataclass
+class GroupColorTransform:
+    type: str = 'groupColor'
+    kwargs: Optional[Dict[ChannelTypes, Reducer]] = None
+
+
+@dataclass
+class GroupTransform:
+    type: str = 'group'
+    kwargs: Optional[Dict[ChannelTypes, Reducer]] = None
+
+
+@dataclass
+class BinXTransform:
+    type: str = 'binX'
+    thresholds: Optional[number] = None
+    kwargs: Optional[Dict[ChannelTypes, Reducer]] = None
+
+
+@dataclass
+class BinTransform:
+    type: str = 'bin'
+    thresholdsX: Optional[number] = None
+    thresholdsY: Optional[number] = None
+    kwargs: Optional[Dict[ChannelTypes, Reducer]] = None
+
+
+SampleFunction = Callable[[List[number], List[number], List[number], number], List[number]]
+
+
+@dataclass
+class SampleTransform:
+    type: str = 'sample'
+    strategy: Union[None, Literal['lttb', 'median', 'max', 'min', 'first', 'last'], SampleFunction] = None
+    """Sample strategy. Default is 'median'."""
+    thresholds: Optional[number] = None
+    """
+    * The thresholds of sample, when data size great then thresholds, sample will take effect.
+    * Default is 2000.
+    """
+    groupBy: Union[None, string, List[string]] = None
+    """Group data by fields, for series data."""
+
+
+@dataclass
+class FilterTransform:
+    type: str = 'filter'
+    kwargs: Optional[Dict[
+        ChannelTypes,
+        Union[List, Callable[[Primitive], boolean]]
+    ]] = None
+
+
+Transform = Union[
+    StackYTransform,
+    DodgeXTransform,
+    NormalizeYTransform,
+    StackEnterTransform,
+    JitterTransform,
+    JitterXTransform,
+    JitterYTransform,
+    SymmetryYTransform,
+    DiffYTransform,
+    SelectTransform,
+    SelectXTransform,
+    SelectYTransform,
+    GroupXTransform,
+    GroupYTransform,
+    GroupColorTransform,
+    SortXTransform,
+    SortYTransform,
+    SortColorTransform,
+    GroupTransform,
+    PackTransform,
+    BinXTransform,
+    BinTransform,
+    SampleTransform,
+    FlexXTransform,
+    FilterTransform,
+]
