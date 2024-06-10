@@ -129,13 +129,13 @@ class CompositeMark(BaseMark):
     ]] = None
 
 
-_IntervalMarkType = Union[ChannelTypes, Literal['series']]
+_IntervalMarkType = Union[Literal['series'], ChannelTypes]
 
 
 @dataclass
 class IntervalMark(BaseMark):
     type: str = 'interval'
-    encode: Union[_IntervalMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_IntervalMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_IntervalMarkType, Scale]] = None
 
 
@@ -151,7 +151,7 @@ _LineMarkType = Union[Literal['position'], str, ChannelTypes]
 @dataclass
 class LineMark(BaseMark):
     type: str = 'line'
-    encode: Union[_LineMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_LineMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_LineMarkType, Scale]] = None
 
 
@@ -166,7 +166,7 @@ _TextMarkType = Union[Literal['text', 'fontSize', 'fontWeight', 'rotate'], Chann
 @dataclass
 class TextMark(BaseMark):
     type: str = 'text'
-    encode: Union[_TextMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_TextMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_TextMarkType, Scale]] = None
 
 
@@ -231,7 +231,7 @@ _ImageMarkType = Union[Literal['src'], ChannelTypes]
 @dataclass
 class ImageMark(BaseMark):
     type: str = 'image'
-    encode: Union[_ImageMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_ImageMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_ImageMarkType, Scale]] = None
 
 
@@ -261,7 +261,7 @@ _VectorMarkType = Union[Literal['rotate', 'size'], ChannelTypes]
 @dataclass
 class VectorMark(BaseMark):
     type: str = 'vector'
-    encode: Union[_VectorMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_VectorMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_VectorMarkType, Scale]] = None
 
 
@@ -306,7 +306,7 @@ _SankeyMark2Type = Union[Literal['source', 'target', 'value'], str, ChannelTypes
 @dataclass
 class _SankeyMark2(BaseMark):
     type: str = 'sankey'
-    encode: Union[_SankeyMark2Type, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_SankeyMark2Type, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_SankeyMark2Type, Scale]] = None
 
 
@@ -342,7 +342,7 @@ _ChordMark2Type = Union[Literal['source', 'target', 'value'], str, ChannelTypes]
 @dataclass
 class _ChordMark2(BaseMark):
     type: str = 'chord'
-    encode: Union[_ChordMark2Type, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_ChordMark2Type, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_ChordMark2Type, Scale]] = None
 
 
@@ -357,7 +357,7 @@ _PathMarkType = Union[Literal['d'], ChannelTypes]
 @dataclass
 class PathMark(BaseMark):
     type: str = 'path'
-    encode: Union[_PathMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_PathMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_PathMarkType, Scale]] = None
 
 
@@ -367,7 +367,7 @@ _TreemapMarkType = Union[Literal['value'], ChannelTypes]
 @dataclass
 class TreemapMark(BaseMark):
     type: str = 'treemap'
-    encode: Union[_TreemapMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_TreemapMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_TreemapMarkType, Scale]] = None
 
 
@@ -377,7 +377,7 @@ _PackMarkType = Union[Literal['value'], ChannelTypes]
 @dataclass
 class PackMark(BaseMark):
     type: str = 'pack'
-    encode: Union[_PackMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_PackMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_PackMarkType, Scale]] = None
 
 
@@ -393,7 +393,7 @@ _ForceGraphMark2Type = Union[Literal['source', 'target', 'color', 'value'], str]
 @dataclass
 class _ForceGraphMark2(BaseMark):
     type: str = 'forceGraph'
-    encode: Union[_ForceGraphMark2Type, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_ForceGraphMark2Type, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_ForceGraphMark2Type, Scale]] = None
 
 
@@ -435,7 +435,7 @@ _TreeMark2Type = Union[Literal['value'], ChannelTypes]
 @dataclass
 class _TreeMark2(BaseMark):
     type: str = 'tree'
-    encode: Union[_TreeMark2Type, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_TreeMark2Type, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_TreeMark2Type, Scale]] = None
 
 
@@ -482,7 +482,7 @@ _WordCloudMarkType = Union[Literal['value', 'text'], ChannelTypes]
 @dataclass
 class WordCloudMark(BaseMark):
     type: str = 'wordCloud'
-    encode: Union[_WordCloudMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_WordCloudMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_WordCloudMarkType, Scale]] = None
     layout: Optional[WordCloudMarkLayout] = None
 
@@ -495,7 +495,7 @@ pin+ChannelTypes的string"""
 @dataclass
 class GaugeMark(BaseMark):
     type: str = 'gauge'
-    encode: Union[_GaugeMark, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_GaugeMark, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_GaugeMark, Scale]] = None
 
 
@@ -505,7 +505,7 @@ _DensityMarkType = Union[Literal['series'], ChannelTypes]
 @dataclass
 class DensityMark(BaseMark):
     type: str = 'density'
-    encode: Union[_DensityMarkType, Union[Encode, List[Encode]], None] = None
+    encode: Optional[Dict[_DensityMarkType, Union[Encode, List[Encode]]]] = None
     scale: Optional[Dict[_DensityMarkType, Scale]] = None
 
 

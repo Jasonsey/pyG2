@@ -18,4 +18,3 @@
 2. kwargs自动处理
 3. xxx_ 参数名自动转 xxx
 4. Tuple类型转转json时自动转List
-5. extend参数自动展开
