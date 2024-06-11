@@ -13,15 +13,20 @@ from .spec import G2Spec
 from .common import as_options
 
 
+
+
+
+
 @dataclass
 class Chart:
-    _spec: Optional[G2Spec] = None
+    container: str = 'container'
+    spec: Optional[G2Spec] = None
     _options: Optional[Dict[str, Any]] = None
 
     def options(self, options: Dict[str, Any]):
         self._options = options
 
     def render(self):
-        if isinstance(self._spec, G2Spec):
-            self._options = as_options(self._spec)
+        if isinstance(self.spec, G2Spec):
+            self._options = as_options(self.spec)
         pass

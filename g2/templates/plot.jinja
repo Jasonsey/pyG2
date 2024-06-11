@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ plot.page_title }}</title>
+    {% for dep in plot.dependencies %}
+        <script type="text/javascript" src="{{ dep.asset }}"></script>
+    {% endfor %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body, div.pyg2-plot-container {
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="{{ plot.plot_id }}" class="pyg2-plot-container"></div>
+<script>
+    const chart_{{ plot.plot_id }} = new Chart(
+        {container: '{{ plot.plot_id }}'}
+    )
+    chart_{{ plot.plot_id }}.options({{ plot.options }})
+    chart_{{ plot.plot_id }}.render()
+</script>
+</body>
+</html>

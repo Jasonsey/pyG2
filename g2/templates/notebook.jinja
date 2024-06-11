@@ -1,0 +1,32 @@
+<script>
+    require.config({
+        paths: {
+            "Chart": "https://unpkg.com/@antv/g2@5"
+        }
+    });
+</script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body, div.pyg2-plot-container {
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+
+<div id="{{ plot.plot_id }}" class="pyg2-plot-container"></div>
+
+<script>
+    require(['Chart'], function (Chart) {
+        const chart_{{ plot.plot_id }} = new Chart(
+            {container: '{{ plot.plot_id }}'}
+        )
+        chart_{{ plot.plot_id }}.options({{ plot.options }})
+        chart_{{ plot.plot_id }}.render()
+    });
+</script>

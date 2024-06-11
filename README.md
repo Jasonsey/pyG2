@@ -6,6 +6,7 @@
 
 1. [@AntV/G2官方文档](https://g2.antv.antgroup.com/)
 2. [@AntV/G2官方代码仓库](https://github.com/antvis/g2)
+3. [PyG2Plot官方仓库](https://github.com/hustcc/PyG2Plot)
 
 ## Attention
 
