@@ -6,60 +6,83 @@
 #
 # =============================================================================
 """plot"""
+import re
 import uuid
-from jinja2 import Environment
-from .engine import Engine
-# from pyg2plot.helper.code import json_dump_to_js
-# from pyg2plot.helper.file import write_utf8_file
-# from pyg2plot.helper.html import HTML
-from typing import Optional
+import datetime
+from typing import *
+from dataclasses import dataclass, field
+
 import simplejson
+from jinja2 import Environment
+
+from .engine import Engine
+
 
 G2PLOT_LIB = 'https://unpkg.com/@antv/g2@5'
 
 
+class HTML:
+    def __init__(self, data: Optional[str] = None):
+        self.data = data
+
+    def _repr_html_(self):
+        return self.data
+
+    def __html__(self):
+        return self._repr_html_()
+
+
+SEP = "!!-_-____-_-!!"
+
+
+class JS:
+    def __init__(self, js_code: str):
+        self.js_code = "%s%s%s" % (SEP, js_code, SEP)
+
+    def replace(self, pattern: str, repl: str):
+        self.js_code = re.sub(pattern, repl, self.js_code)
+        return self
+
+
+def _json_dump_default(o: object):
+    if isinstance(o, (datetime.date, datetime.datetime)):
+        return o.isoformat()
+    if isinstance(o, JS):
+        return o.replace("\\n|\\t", "").replace(r"\\n", "\n").replace(r"\\t", "\t").js_code
+    return o
+
+
+def json_dump_to_js(options: object):
+    return re.sub(
+        '"?%s"?' % SEP,
+        "",
+        simplejson.dumps(options, indent=2, default=_json_dump_default, ignore_nan=True)
+    )
+
+
+@dataclass
 class Plot:
-    """
-    instance with plot type string
-    """
+    """instance with plot type string"""
+    plot_id: str = field(default_factory=lambda: uuid.uuid4().hex)
+    version: str = '2'
+    options: Dict = field(default_factory=lambda: dict())
+    js_options: str = ''
+    dependencies: Optional[List[Dict[str, str]]] = None
+    page_title: str = 'PyG2'
+    """page setting"""
 
-    def __init__(self, plot_type: str, version: str = '2'):
-        self.plot_type = plot_type
-        self.plot_id = uuid.uuid4().hex
-        self.version = version
-        self.options = {}
-
-        # page settting
-        self.page_title = "PyG2Plot"
-
-    '''
-    set the G2Plot options, documents [here](https://g2plot.antv.vision/)
-    '''
-    def set_options(self, options: object):
+    def set_options(self, options: dict):
+        """set the G2 options, documents [here](https://g2.antv.antgroup.com/)"""
         self.options = options
         return self
 
-    '''
-    get the JavaScript options of G2Plot
-    '''
+    def dump_options(self):
+        """处理options关联内容"""
+        self.js_options = json_dump_to_js(self.options)
 
-    def dump_js_options(
-            self,
-            env: Optional[Environment] = None,
-            **kwargs
-    ) -> str:
-        return json_dump_to_js(self.options)
-
-    '''
-    render plot into jupyter
-    '''
-
-    def render_notebook(
-            self,
-            env: Optional[Environment] = None,
-            **kwargs
-    ) -> HTML:
-        self.js_options = self.dump_js_options(env=env, **kwargs)
+    def render_notebook(self, env: Optional[Environment] = None, **kwargs) -> HTML:
+        """render plot into jupyter"""
+        self.dump_options()
         # get html string
         return HTML(Engine(env=env).render(
             plot=self,
@@ -67,16 +90,9 @@ class Plot:
             **kwargs
         ))
 
-    '''
-    render plot into jupyter lab
-    '''
-
-    def render_jupyter_lab(
-            self,
-            env: Optional[Environment] = None,
-            **kwargs
-    ) -> HTML:
-        self.js_options = self.dump_js_options(env=env, **kwargs)
+    def render_jupyter_lab(self, env: Optional[Environment] = None, **kwargs) -> HTML:
+        """ render plot into jupyter lab """
+        self.dump_options()
         # get html string
         return HTML(Engine(env=env).render(
             plot=self,
@@ -84,18 +100,11 @@ class Plot:
             **kwargs
         ))
 
-    '''
-    render plot to html string
-    '''
-
-    def render_html(
-            self,
-            env: Optional[Environment] = None,
-            **kwargs
-    ) -> str:
-        self.js_options = self.dump_js_options(env=env, **kwargs)
+    def render_html(self, env: Optional[Environment] = None, **kwargs) -> str:
+        """ render plot to html string """
+        self.dump_options()
         self.dependencies = [{
-            "name": "G2Plot",
+            "name": "G2",
             "asset": G2PLOT_LIB,
         }]
         # get html string
@@ -105,18 +114,11 @@ class Plot:
             **kwargs
         )
 
-    '''
-    render the plot into html file
-    '''
-
-    def render(
-            self,
-            path: str = "plot.html",
-            env: Optional[Environment] = None,
-            **kwargs
-    ) -> str:
+    def render(self, path: str = "plot.html", env: Optional[Environment] = None, **kwargs) -> str:
+        """ render the plot into html file """
         # get html string
         html = self.render_html(env, **kwargs)
         # write output into file
-        write_utf8_file(path, html)
+        with open(path, "w") as f:
+            f.write(html)
         return path

@@ -11,22 +11,15 @@ from dataclasses import dataclass
 
 from .spec import G2Spec
 from .common import as_options
-
-
-
-
+from .plot import Plot
 
 
 @dataclass
-class Chart:
-    container: str = 'container'
+class Chart(Plot):
     spec: Optional[G2Spec] = None
-    _options: Optional[Dict[str, Any]] = None
 
-    def options(self, options: Dict[str, Any]):
-        self._options = options
-
-    def render(self):
+    def dump_options(self):
+        """处理options关联内容"""
         if isinstance(self.spec, G2Spec):
-            self._options = as_options(self.spec)
-        pass
+            self.options = as_options(self.spec)
+        super().dump_options()

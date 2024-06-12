@@ -30,7 +30,7 @@
         const chart_{{ plot.plot_id }} = new Chart(
             {container: '{{ plot.plot_id }}'}
         )
-        chart_{{ plot.plot_id }}.options({{ plot.options }})
+        chart_{{ plot.plot_id }}.options({{ plot.js_options }})
         chart_{{ plot.plot_id }}.render()
     });
 </script>

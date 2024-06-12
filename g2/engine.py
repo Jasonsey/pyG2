@@ -7,6 +7,8 @@
 # =============================================================================
 """engine"""
 import os
+from dataclasses import dataclass
+
 from jinja2 import Environment, FileSystemLoader
 from typing import Optional
 
@@ -23,15 +25,12 @@ GLOBAL_ENV = Environment(
 )
 
 
+@dataclass
 class Engine:
+    env: Environment = GLOBAL_ENV
 
-    def __init__(self, env: Optional[Environment] = None):
-        self.env = env or GLOBAL_ENV
-
-    '''
-    render plot to html string with template
-    '''
     def render(self, plot: any, template_name: str, **kwargs):
+        """ render plot to html string with template """
         # get template content
         tpl = self.env.get_template(template_name)
         # render with jinja2
