@@ -27,11 +27,12 @@ GLOBAL_ENV = Environment(
 
 @dataclass
 class Engine:
-    env: Environment = GLOBAL_ENV
+    env: Optional[Environment] = None
 
     def render(self, plot: any, template_name: str, **kwargs):
         """ render plot to html string with template """
         # get template content
-        tpl = self.env.get_template(template_name)
+        env = GLOBAL_ENV if self.env is None else self.env
+        tpl = env.get_template(template_name)
         # render with jinja2
         return tpl.render(plot=plot, **kwargs)

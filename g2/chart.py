@@ -18,6 +18,10 @@ from .plot import Plot
 class Chart(Plot):
     spec: Optional[G2Spec] = None
 
+    def set_spec(self, spec: G2Spec):
+        self.spec = spec
+        return self
+
     def dump_options(self):
         """处理options关联内容"""
         if isinstance(self.spec, G2Spec):

@@ -10,6 +10,7 @@ import re
 import uuid
 import datetime
 from typing import *
+from pathlib import Path
 from dataclasses import dataclass, field
 
 import simplejson
@@ -86,7 +87,7 @@ class Plot:
         # get html string
         return HTML(Engine(env=env).render(
             plot=self,
-            template_name="notebook.html",
+            template_name="notebook.jinja",
             **kwargs
         ))
 
@@ -96,7 +97,7 @@ class Plot:
         # get html string
         return HTML(Engine(env=env).render(
             plot=self,
-            template_name="jupyter-lab.html",
+            template_name="jupyter-lab.jinja",
             **kwargs
         ))
 
@@ -110,15 +111,17 @@ class Plot:
         # get html string
         return Engine(env=env).render(
             plot=self,
-            template_name="plot.html",
+            template_name="plot.jinja",
             **kwargs
         )
 
-    def render(self, path: str = "plot.html", env: Optional[Environment] = None, **kwargs) -> str:
+    def render(self, path: str = "./tmp/plot.html", env: Optional[Environment] = None, **kwargs) -> str:
         """ render the plot into html file """
         # get html string
         html = self.render_html(env, **kwargs)
         # write output into file
+        if not Path(path).parent.exists():
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
             f.write(html)
         return path

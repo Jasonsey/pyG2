@@ -1,7 +1,7 @@
 <script>
     require.config({
         paths: {
-            "Chart": "https://unpkg.com/@antv/g2@5"
+            "G2": "https://unpkg.com/@antv/g2@5"
         }
     });
 </script>
@@ -22,8 +22,8 @@
 <div id="{{ plot.plot_id }}" class="pyg2-plot-container"></div>
 
 <script>
-    require(['Chart'], function (Chart) {
-        const chart_{{ plot.plot_id }} = new Chart(
+    require(['G2'], function (G2) {
+        const chart_{{ plot.plot_id }} = new G2.Chart(
             {container: '{{ plot.plot_id }}'}
         )
         chart_{{ plot.plot_id }}.options({{ plot.js_options }})

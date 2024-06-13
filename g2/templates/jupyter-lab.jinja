@@ -27,7 +27,7 @@
         script.src = "https://unpkg.com/@antv/g2@5";
         document.head.appendChild(script);
     }).then(() => {
-        const chart_{{ plot.plot_id }} = new Chart(
+        const chart_{{ plot.plot_id }} = new G2.Chart(
             {container: '{{ plot.plot_id }}'}
         )
         chart_{{ plot.plot_id }}.options({{ plot.js_options }})
