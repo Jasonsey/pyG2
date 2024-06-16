@@ -5,7 +5,10 @@
 # @Time  : 2024/6/8 21:07
 #
 # =============================================================================
-"""theme"""
+"""theme
+
+G2 中主题（Theme） 是图表中图形的一些默认样式。
+"""
 from typing import *
 from dataclasses import dataclass
 

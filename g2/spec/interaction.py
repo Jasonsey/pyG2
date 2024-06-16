@@ -5,7 +5,10 @@
 # @Time  : 2024/6/8 17:31
 #
 # =============================================================================
-"""interaction"""
+"""interaction
+
+G2 中交互（Interaction） 提供了按需探索数据的能力。
+"""
 from typing import *
 from dataclasses import dataclass
 

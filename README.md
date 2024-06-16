@@ -1,6 +1,6 @@
 # pyG2
- Python3 binding for `@AntV/G2` Plotting Library .
 
+Python3 binding for `@AntV/G2` Plotting Library .
 
 ## Reference
 
@@ -19,3 +19,4 @@
 2. kwargs自动处理
 3. xxx_ 参数名自动转 xxx
 4. Tuple类型转转json时自动转List
+5. G2模块依赖关系分析

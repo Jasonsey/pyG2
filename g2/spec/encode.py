@@ -1,3 +1,11 @@
+# pyG2
+#
+# @Author: Lin, Max
+# @Email : jason.max.lin@outlook.com
+# @Time  : 2024/6/8 09:55
+#
+# =============================================================================
+""" G2 中编码（Encode） 主要用于指定视觉元素属性和数据之间的关系 """
 from typing import *
 from dataclasses import dataclass
 

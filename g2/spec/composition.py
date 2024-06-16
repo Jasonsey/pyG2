@@ -5,7 +5,11 @@
 # @Time  : 2024/6/9 21:42
 #
 # =============================================================================
-"""composition"""
+"""composition
+
+G2 中视图复合（View Composition） 提供了在一个可视化中绘制多个图表的能力。G2 定义了一个视图树（View Graph） 去描述多视图图表（Multi-View Plot）。
+一句话总结：属于view组件，用于绘制多图。如果只有一个图，用mark就好
+"""
 from typing import *
 from dataclasses import dataclass
 

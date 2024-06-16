@@ -5,7 +5,7 @@
 # @Time  : 2024/6/8 09:07
 #
 # =============================================================================
-"""palette.py"""
+""" G2 的一些内置的色板 """
 from typing import *
 from dataclasses import dataclass
 

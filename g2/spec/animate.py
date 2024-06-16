@@ -5,7 +5,10 @@
 # @Time  : 2024/6/8 09:55
 #
 # =============================================================================
-"""animate.py"""
+"""animate
+
+动画组件
+"""
 from typing import *
 from dataclasses import dataclass
 

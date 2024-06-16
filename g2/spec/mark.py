@@ -1,3 +1,14 @@
+# pyG2
+#
+# @Author: Lin, Max
+# @Email : jason.max.lin@outlook.com
+# @Time  : 2024/6/8 17:31
+#
+# =============================================================================
+"""mark
+
+在 G2 中没有图表的概念，而是把标记（Mark）作为基本的视觉组成单元，任何一个图表都是多个标记组合而成的。和传统的绘制系统不同，标记提供了绘制抽象数据的能力。
+"""
 from typing import *
 from dataclasses import dataclass
 
