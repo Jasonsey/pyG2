@@ -9,7 +9,7 @@
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import number, boolean
+from g2.utils.common import number, boolean
 
 from .component import AxisComponent, LegendComponent
 from .composition import Composition

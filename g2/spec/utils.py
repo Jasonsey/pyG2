@@ -8,7 +8,7 @@
 """utils.py"""
 from typing import *
 
-from g2.common import number
+from g2.utils.common import number
 
 
 Padding = Union[number, Literal['auto']]

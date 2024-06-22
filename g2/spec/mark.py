@@ -23,7 +23,7 @@ from .component import TooltipComponent, AxisComponent, LegendComponent, SliderC
     TitleComponent
 from .interaction import Interaction, InteractionTypes
 from .theme import Theme
-from g2.common import number, ChannelTypes
+from g2.utils.common import number, ChannelTypes
 from .utils import Padding, Closeable
 
 

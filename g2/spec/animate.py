@@ -12,7 +12,7 @@
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import number
+from g2.utils.common import number
 
 
 AnimationTypes = Literal[

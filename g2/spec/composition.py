@@ -13,7 +13,7 @@ G2 中视图复合（View Composition） 提供了在一个可视化中绘制多
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import number, string, boolean
+from g2.utils.common import number, string, boolean
 from .utils import Closeable, Padding
 from .data import Data
 from .coordinate import Coordinate

@@ -9,7 +9,7 @@
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import number
+from g2.utils.common import number
 
 TickMethodType = TypeVar("TickMethodType", number, str)
 TickMethod = Callable[[TickMethodType, TickMethodType, Optional[number], List], List[Any]]

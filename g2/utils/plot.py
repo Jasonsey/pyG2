@@ -6,59 +6,18 @@
 #
 # =============================================================================
 """plot"""
-import re
 import uuid
-import datetime
 from typing import *
 from pathlib import Path
 from dataclasses import dataclass, field
 
-import simplejson
 from jinja2 import Environment
 
+from .common import json_dump_to_js, HTML
 from .engine import Engine
 
 
 G2PLOT_LIB = 'https://unpkg.com/@antv/g2@5'
-
-
-class HTML:
-    def __init__(self, data: Optional[str] = None):
-        self.data = data
-
-    def _repr_html_(self):
-        return self.data
-
-    def __html__(self):
-        return self._repr_html_()
-
-
-SEP = "!!-_-____-_-!!"
-
-
-class JS:
-    def __init__(self, js_code: str):
-        self.js_code = "%s%s%s" % (SEP, js_code, SEP)
-
-    def replace(self, pattern: str, repl: str):
-        self.js_code = re.sub(pattern, repl, self.js_code)
-        return self
-
-
-def _json_dump_default(o: object):
-    if isinstance(o, (datetime.date, datetime.datetime)):
-        return o.isoformat()
-    if isinstance(o, JS):
-        return o.replace("\\n|\\t", "").replace(r"\\n", "\n").replace(r"\\t", "\t").js_code
-    return o
-
-
-def json_dump_to_js(options: object):
-    return re.sub(
-        '"?%s"?' % SEP,
-        "",
-        simplejson.dumps(options, indent=2, default=_json_dump_default, ignore_nan=True)
-    )
 
 
 @dataclass

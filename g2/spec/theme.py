@@ -12,7 +12,7 @@ G2 中主题（Theme） 是图表中图形的一些默认样式。
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import number
+from g2.utils.common import number
 
 
 ThemeTypes = Literal[

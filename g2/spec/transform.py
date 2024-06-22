@@ -14,7 +14,7 @@ G2 中的标记转换（Mark Transform） 提供了一个方便的机制，去�
 from typing import *
 from dataclasses import dataclass
 
-from g2.common import string, number, Primitive, boolean, ChannelTypes
+from g2.utils.common import string, number, Primitive, boolean, ChannelTypes
 
 TransformTypes = Literal[
     'dodgeX',

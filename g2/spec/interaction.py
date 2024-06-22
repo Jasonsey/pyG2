@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from .coordinate.coordinate_transform import FisheyeCoordinate
 from .component import TooltipItemValue
-from g2.common import number
+from g2.utils.common import number
 
 
 TooltipPosition = Literal[
