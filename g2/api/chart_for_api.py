@@ -8,33 +8,14 @@
 #
 # =============================================================================
 """chart"""
-from typing import *
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from .mark import Mark
-from .base import PlotForAPI
+from g2.core.chart import ChartBase
 
 
 @dataclass
-class ChartDS:
-    container: str = 'container'
-    """指定 chart 绘制的 DOM，可以传入 DOM id"""
-    width: int = 640
-    """图表宽度"""
-    height: int = 480
-    """图表高度"""
-    depth: int = 0
-    """图表深度，在 3D 图表中使用"""
-    autoFit: bool = False
-    """图表是否自适应容器宽高，默认为 false，用户需要手动设置 width 和 height。
-    当 autoFit: true 时，会自动取图表容器的宽高，如果用户设置了 height，那么会以用户设置的 height 为准。"""
-    padding: int = 30
-    """图表内边距"""
-    """图标生成字典对象"""
-    kwargs: Optional[Dict[str, Any]] = None
-
-
-class Chart(Mark):
+class ChartForAPI(Mark, ChartBase):
 
     def interval(self):
         self.render_data.append(['interval()'])

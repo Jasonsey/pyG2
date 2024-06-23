@@ -26,7 +26,13 @@
         const chart_{{ plot.plot_id }} = new G2.Chart(
             {container: '{{ plot.plot_id }}'}
         )
-        chart_{{ plot.plot_id }}.options({{ plot.js_options }})
+        {% if plot.plot_api_type == "spec" %}
+            chart_{{ plot.plot_id }}.options({{ plot.js_options }})
+        {% elif plot.plot_api_type == "api" %}
+            {% for item in plot.render_data %}
+                chart_{{ plot.plot_id }}.{{ item | join(".") }}
+            {% endfor %}
+        {% endif %}
         chart_{{ plot.plot_id }}.render()
     });
 </script>

@@ -6,7 +6,7 @@
 #
 # =============================================================================
 """test_chart"""
-from g2.chart import Chart
+from g2.spec.chart_for_spec import ChartForSpec
 from g2.spec.data import InlineConnector
 from g2.spec.mark import IntervalMark
 from g2.spec.encode import FieldEncode
@@ -16,7 +16,7 @@ from g2.spec import G2Spec
 class TestChart:
     @classmethod
     def setup_class(cls):
-        cls.chart = Chart()
+        cls.chart = ChartForSpec()
         data = InlineConnector(value=[
             {'genre': 'Sports', 'sold': 275},
             {'genre': 'Strategy', 'sold': 115},
@@ -31,13 +31,11 @@ class TestChart:
         cls.spec = G2Spec(extend=mark)
 
     def test_render_html(self):
-        chart = self.chart.set_spec(spec=self.spec)
+        chart = self.chart.options(self.spec)
         res = chart.render_html()
         print(res)
 
     def test_render(self):
-        chart = self.chart.set_spec(spec=self.spec)
+        chart = self.chart.options(self.spec)
         res = chart.render()
         print(res)
-
-

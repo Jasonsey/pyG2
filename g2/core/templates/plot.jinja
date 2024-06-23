@@ -27,13 +27,12 @@
     )
     {% if plot.plot_api_type == "spec" %}
         chart_{{ plot.plot_id }}.options({{ plot.js_options }})
-        chart_{{ plot.plot_id }}.render()
     {% elif plot.plot_api_type == "api" %}
         {% for item in plot.render_data %}
             chart_{{ plot.plot_id }}.{{ item | join(".") }}
         {% endfor %}
-        chart_{{ plot.plot_id }}.render()
     {% endif %}
+    chart_{{ plot.plot_id }}.render()
 </script>
 </body>
 </html>

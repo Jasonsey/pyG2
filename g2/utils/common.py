@@ -9,43 +9,32 @@
 import datetime
 import re
 from typing import *
-from dataclasses import dataclass, asdict, is_dataclass
+from dataclasses import is_dataclass
 from typing import Optional
 
 import simplejson
 
-number = Union[int, float]
-Primitive = Union[int, float, str]
-string = str
-boolean = bool
-ChannelTypes = Literal[
-    'x',
-    'y',
-    'z',
-    'x1',
-    'y1',
-    'series',
-    'color',
-    'opacity',
-    'shape',
-    'size',
-    'key',
-    'groupKey',
-    'position',
-    'series',
-    'enterType',
-    'enterEasing',
-    'enterDuration',
-    'enterDelay',
-    'updateType',
-    'updateEasing',
-    'updateDuration',
-    'updateDelay',
-    'exitType',
-    'exitEasing',
-    'exitDuration',
-    'exitDelay',
-]
+SEP = "!!-_-____-_-!!"
+
+
+class JS:
+    def __init__(self, js_code: str):
+        self.js_code = "%s%s%s" % (SEP, js_code, SEP)
+
+    def replace(self, pattern: str, repl: str):
+        self.js_code = re.sub(pattern, repl, self.js_code)
+        return self
+
+
+class HTML:
+    def __init__(self, data: Optional[str] = None):
+        self.data = data
+
+    def _repr_html_(self):
+        return self.data
+
+    def __html__(self):
+        return self._repr_html_()
 
 
 def spec2options(data: Union[list, tuple, dict, Any], /, *, strip_param=True):
@@ -85,24 +74,6 @@ def spec2options(data: Union[list, tuple, dict, Any], /, *, strip_param=True):
     return res
 
 
-def as_options(obj):
-    assert is_dataclass(obj)
-    data = spec2options(obj)
-    return data
-
-
-SEP = "!!-_-____-_-!!"
-
-
-class JS:
-    def __init__(self, js_code: str):
-        self.js_code = "%s%s%s" % (SEP, js_code, SEP)
-
-    def replace(self, pattern: str, repl: str):
-        self.js_code = re.sub(pattern, repl, self.js_code)
-        return self
-
-
 def _json_dump_default(o: object):
     if isinstance(o, (datetime.date, datetime.datetime)):
         return o.isoformat()
@@ -111,20 +82,49 @@ def _json_dump_default(o: object):
     return o
 
 
-def json_dump_to_js(options: object):
+def _json_dump_to_js(options: object):
     return re.sub(
         '"?%s"?' % SEP,
         "",
-        simplejson.dumps(options, indent=2, default=_json_dump_default, ignore_nan=True)
+        simplejson.dumps(options, indent=4, default=_json_dump_default, ignore_nan=True)
     )
 
 
-class HTML:
-    def __init__(self, data: Optional[str] = None):
-        self.data = data
+def dump_to_js_string(data):
+    data = spec2options(data)
+    data = _json_dump_to_js(data)
+    return data
 
-    def _repr_html_(self):
-        return self.data
 
-    def __html__(self):
-        return self._repr_html_()
+number = Union[int, float]
+Primitive = Union[int, float, str]
+string = str
+boolean = bool
+ChannelTypes = Literal[
+    'x',
+    'y',
+    'z',
+    'x1',
+    'y1',
+    'series',
+    'color',
+    'opacity',
+    'shape',
+    'size',
+    'key',
+    'groupKey',
+    'position',
+    'series',
+    'enterType',
+    'enterEasing',
+    'enterDuration',
+    'enterDelay',
+    'updateType',
+    'updateEasing',
+    'updateDuration',
+    'updateDelay',
+    'exitType',
+    'exitEasing',
+    'exitDuration',
+    'exitDelay',
+]

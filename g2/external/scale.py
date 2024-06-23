@@ -28,7 +28,7 @@ Interpolates = Callable[[InterpolateType, InterpolateType], InterpolateType]
 Comparator = Callable[[Any, Any], number]
 """比较器"""
 
-TickMethodOptions = Callable[[number|str, number|str, number, Optional[number], Optional[bool]], Optional[bool]]
+TickMethodOptions = Callable[[number | str, number | str, number, Optional[number], Optional[bool]], Optional[bool]]
 """tickMethod 和 nice 需要使用的参数"""
 
 Transform = Callable[[Any], Any]

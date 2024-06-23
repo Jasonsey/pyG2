@@ -11,7 +11,7 @@ from g2.spec.mark import IntervalMark
 from g2.spec.data import InlineConnector
 from g2.spec.encode import FieldEncode
 
-from g2.common import as_options
+from g2.utils.common import spec2options
 
 
 def test_interval():
@@ -47,5 +47,5 @@ def test_as_options():
     spec = G2Spec(
         extend=mark
     )
-    options = as_options(spec)
+    options = spec2options(spec)
     print(options)
