@@ -10,7 +10,7 @@
 """mark"""
 from typing import *
 
-from g2.spec.data import InlineConnector, Data
+from g2.spec.data import InlineConnector, Data, FetchConnector
 from g2.spec.scale import Scale
 from g2.spec.transform import TransformTypes
 from g2.spec.coordinate import CoordinateTypes, Coordinate
@@ -24,9 +24,16 @@ from g2.core.plot import PlotForAPI
 
 class Mark(PlotForAPI):
 
-    def data(self, item: Data | list):
+    def data(self, item: Data | list | dict):
         if isinstance(item, list):
             item = InlineConnector(value=item)
+        elif isinstance(item, dict):
+            if item['type'] == 'fetch':
+                item = FetchConnector(**item)
+            elif item['type'] == 'inline':
+                item = InlineConnector(**item)
+            else:
+                raise KeyError('Unknown item type')
         item = dump_to_js_string(item)
         self.render_data[-1].append(f"data({item})")
         return self

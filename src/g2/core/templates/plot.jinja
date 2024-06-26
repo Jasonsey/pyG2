@@ -22,9 +22,19 @@
 <body>
 <div id="{{ plot.plot_id }}" class="pyg2-plot-container"></div>
 <script>
-    const chart_{{ plot.plot_id }} = new G2.Chart(
-        {container: '{{ plot.plot_id }}'}
-    )
+    const chart_{{ plot.plot_id }} = new G2.Chart({
+        container: '{{ plot.plot_id }}',
+        width: {{ plot.width }},
+        height: {{ plot.height }},
+        depth: {{ plot.depth }},
+        autoFit: {{ "true" if plot.autoFit else "false" }},
+        padding: {{ plot.padding }},
+    {% if plot.kwargs %}
+        {% for key, value in plot.kwargs.items() %}
+            {{ key }}: {{ value }},
+        {% endfor %}
+    {% endif %}
+    })
     {% if plot.plot_api_type == "spec" %}
         chart_{{ plot.plot_id }}.options({{ plot.js_options }})
     {% elif plot.plot_api_type == "api" %}

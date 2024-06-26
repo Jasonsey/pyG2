@@ -12,6 +12,18 @@ from dataclasses import dataclass
 from .coordinate_transform import CoordinateTransform
 from g2.utils.common import number
 
+__all__ = [
+    'CoordinateTypes',
+    'PolarCoordinate',
+    'HelixCoordinate',
+    'RadarCoordinate',
+    'ThetaCoordinate',
+    'RadialCoordinate',
+    'CartesianCoordinate',
+    'ParallelCoordinate',
+    'GeoCoordinate',
+    'Coordinate'
+]
 
 CoordinateTypes = Union[str, Literal[
     'polar',

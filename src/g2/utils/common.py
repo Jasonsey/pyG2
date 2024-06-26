@@ -6,11 +6,12 @@
 #
 # =============================================================================
 """common"""
-import datetime
 import re
+import datetime
 from typing import *
-from dataclasses import is_dataclass
 from typing import Optional
+from importlib import metadata
+from dataclasses import is_dataclass
 
 import simplejson
 
@@ -94,6 +95,17 @@ def dump_to_js_string(data):
     data = spec2options(data)
     data = _json_dump_to_js(data)
     return data
+
+
+def get_version():
+    try:
+        # 安装完成后，获取安装的version
+        version = metadata.version("g2")
+    except metadata.PackageNotFoundError:
+        # 发布或者开发时，当前日期作为发布版本
+        now = datetime.datetime.now()
+        version = f"{now.year}.{now.month}.{now.day}"
+    return version
 
 
 number = Union[int, float]

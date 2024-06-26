@@ -3,6 +3,12 @@ from dataclasses import dataclass
 
 from .data_transform import DataTransform
 
+__all__ = [
+    'FetchConnector',
+    'InlineConnector',
+    'Data',
+]
+
 
 @dataclass
 class FetchConnector:

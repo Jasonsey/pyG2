@@ -15,8 +15,10 @@ Python3 binding for `@AntV/G2` Plotting Library .
 
 ## TODO
 
-1. dataclass自动转换
-2. kwargs自动处理
-3. xxx_ 参数名自动转 xxx
-4. Tuple类型转转json时自动转List
-5. G2模块依赖关系分析
+- [x] dataclass自动转换
+- [x] kwargs自动处理
+- [x] xxx_ 参数名自动转 xxx
+- [x] Tuple类型转转json时自动转List
+- [x] G2模块依赖关系分析
+- [x] 整理需要对外暴露的接口
+- [ ] 维护例子代码文档

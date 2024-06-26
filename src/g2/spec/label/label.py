@@ -3,6 +3,8 @@ from dataclasses import dataclass
 
 from .label_transform import LabelTransform
 
+__all__ = ["Label"]
+
 
 @dataclass
 class Label:
@@ -24,7 +26,9 @@ class Label:
     shadow_offset_x: Optional[int] = None
     shadow_offset_y: Optional[int] = None
     cursor: str = 'default'
-    position: Optional[Literal['top', 'left', 'right', 'bottom', 'top-left', 'top-right', 'bottom-left', 'bottom-right', 'inside', 'outside', 'spider', 'surround', 'area']] = None
+    position: Optional[Literal[
+        'top', 'left', 'right', 'bottom', 'top-left', 'top-right', 'bottom-left', 'bottom-right', 'inside', 'outside',
+        'spider', 'surround', 'area']] = None
     selector: Optional[Literal['last', 'first']] = None
     connector: Optional[bool] = None
     background: Optional[bool] = None

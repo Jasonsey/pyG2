@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel", "simplejson", "jinja2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "g2"
+dynamic = ["version"]
+description = "Python3 binding for `@AntV/G2` Plotting Library ."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "simplejson",
+    "jinja2"
+]
+authors = [
+    { name = "Max, Lin", email = "jason.m.lin@outlook.com" }
+]
+license = { text = "Apache 2.0" }
+classifiers = [
+    'Development Status :: 4 - Beta',
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.jinja"]
+
+[tool.setuptools.dynamic]
+version = { attr = "g2.__version__" }

@@ -23,9 +23,14 @@
 
 <script>
     require(['G2'], function (G2) {
-        const chart_{{ plot.plot_id }} = new G2.Chart(
-            {container: '{{ plot.plot_id }}'}
-        )
+        const chart_{{ plot.plot_id }} = new G2.Chart({
+            container: '{{ plot.plot_id }}',
+            width: {{ plot.width }},
+            height: {{ plot.height }},
+            depth: {{ plot.depth }},
+            autoFit: {{ "true" if plot.autoFit else "false" }},
+            padding: {{ plot.padding }},
+        })
         {% if plot.plot_api_type == "spec" %}
             chart_{{ plot.plot_id }}.options({{ plot.js_options }})
         {% elif plot.plot_api_type == "api" %}
