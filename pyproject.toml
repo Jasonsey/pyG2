@@ -34,6 +34,11 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
+[project.urls]
+Homepage = "https://github.com/Jasonsey/pyG2"
+Source = "https://github.com/Jasonsey/pyG2"
+Tracker = "https://github.com/Jasonsey/pyG2/issues"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

@@ -11,7 +11,7 @@
 from g2 import Chart
 
 
-def example_chart():
+def example_interval():
     chart = Chart(container='container', width=640, height=480)
     chart.interval().data([
         {'genre': 'Sports', 'sold': 275},

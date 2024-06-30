@@ -8,4 +8,4 @@
 #
 # =============================================================================
 """__init__.py"""
-from chart import example_chart
+from interval import example_interval
